@@ -1,5 +1,4 @@
 # Sduino: Small Devices Arduino
-##
 This is a fork of [akashkapashia's STM8 platform repository](https://github.com/akashkapashia/stm8_arduino) with the integration of [stefaandesmet2003's I2C slave functionality](https://github.com/stefaandesmet2003/sduino).
 
 
