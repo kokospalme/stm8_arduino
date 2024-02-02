@@ -2,7 +2,7 @@
     "packages": [
         {
             "name": "sduino",
-            "maintainer": "Michael Mayerrrr",
+            "maintainer": "Michael Mayer",
             "websiteURL": "https://tenbaht.github.io/sduino/",
             "email": "michael-mayer@gmx.de",
             "help": {
@@ -12,7 +12,7 @@
                 {
                     "name": "Sduino STM8 plain C core (non-C++)",
                     "architecture": "stm8",
-                    "version": "0.6",
+                    "version": "0.5.1",
                     "category": "Contributed",
                     "boards": [
                         {"name": "STM8S103F3 Breakout Board"},
