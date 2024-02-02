@@ -16,8 +16,10 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+  Modified 2024 by kokospalme by adding slave functionality from: https://github.com/stefaandesmet2003/sduino/blame/master/hardware/stm8/0.5.0/libraries/Wire/src/Wire.c
   Modified 2017 by Michael Mayer to plain C for use with Sduino
   Modified 2012 by Todd Krein (todd@krein.org) to implement repeated starts
+  
 */
 
 //extern "C" {
@@ -41,6 +43,11 @@ static uint8_t txBufferIndex = 0;
 static uint8_t txBufferLength = 0;
 
 static uint8_t transmitting = 0;
+static void (*user_onRequest)(void);
+static void (*user_onReceive)(int);
+static void onRequestService(void);
+static void onReceiveService(uint8_t* inBytes, int numBytes);
+
 /*
 void (*TwoWire::user_onRequest)(void);
 void (*TwoWire::user_onReceive)(int);
@@ -65,6 +72,14 @@ void Wire_begin(void)
   txBufferLength = 0;
 
   twi_init();
+  twi_attachSlaveTxEvent(onRequestService); // default callback must exist
+  twi_attachSlaveRxEvent(onReceiveService); // default callback must exist
+}
+
+void Wire_beginSlave(uint8_t address)
+{
+  Wire_begin();
+  twi_setAddress(address);
 }
 
 /*
@@ -87,24 +102,20 @@ void Wire_end(void)
 	twi_disable();
 }
 
-
 void Wire_setClock(uint32_t clock)
 {
 	twi_setFrequency(clock);
 }
-
 
 void Wire_setTimeout(uint16_t ms)
 {
 	twi_setTimeout(ms);
 }
 
-
 uint8_t Wire_requestFrom2(uint8_t address, uint8_t quantity)
 {
   return Wire_requestFrom3(address, quantity, (uint8_t)true);
 }
-
 
 uint8_t Wire_requestFrom3(uint8_t address, uint8_t quantity, uint8_t sendStop)
 {
@@ -122,7 +133,6 @@ uint8_t Wire_requestFrom3(uint8_t address, uint8_t quantity, uint8_t sendStop)
 
   return read;
 }
-
 
 uint8_t Wire_requestFrom5(uint8_t address, uint8_t quantity, uint32_t iaddress, uint8_t isize, uint8_t sendStop)
 {
@@ -259,12 +269,10 @@ size_t Wire_write(uint8_t data)
   return 1;
 }
 
-
 size_t Wire_write_s(const uint8_t *data)
 {
 	return Wire_write_sn(data,strlen(data));
 }
-
 
 // must be called in:
 // slave tx event callback
@@ -283,7 +291,6 @@ size_t Wire_write_sn(const uint8_t *data, size_t quantity)
   }
   return quantity;
 }
-
 
 // must be called in:
 // slave rx event callback
@@ -309,7 +316,6 @@ int Wire_read(void)
   return value;
 }
 
-
 // must be called in:
 // slave rx event callback
 // or after requestFrom(address, numBytes)
@@ -329,9 +335,8 @@ void Wire_flush(void)
   // XXX: to be implemented.
 }
 
-/*
 // behind the scenes function that is called when data is received
-void TwoWire::onReceiveService(uint8_t* inBytes, int numBytes)
+static void onReceiveService(uint8_t* inBytes, int numBytes)
 {
   // don't bother if user hasn't registered a callback
   if(!user_onReceive){
@@ -356,7 +361,7 @@ void TwoWire::onReceiveService(uint8_t* inBytes, int numBytes)
 }
 
 // behind the scenes function that is called when data is requested
-void TwoWire::onRequestService(void)
+static void onRequestService(void)
 {
   // don't bother if user hasn't registered a callback
   if(!user_onRequest){
@@ -371,19 +376,19 @@ void TwoWire::onRequestService(void)
 }
 
 // sets function called on slave write
-void TwoWire::onReceive( void (*function)(int) )
+void Wire_onReceive( void (*function)(int) )
 {
   user_onReceive = function;
 }
 
 // sets function called on slave read
-void TwoWire::onRequest( void (*function)(void) )
+void Wire_onRequest( void (*function)(void) )
 {
   user_onRequest = function;
 }
 
+/*
 // Preinstantiate Objects //////////////////////////////////////////////////////
 
 TwoWire Wire = TwoWire();
-
 */
