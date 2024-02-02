@@ -16,6 +16,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+  Modified 2024 by kokospalme to add slave functionality from: https://github.com/stefaandesmet2003/sduino/blob/master/hardware/stm8/0.5.0/libraries/Wire/src/Wire.h
   Modified 2012 by Todd Krein (todd@krein.org) to implement repeated starts
   Modified 2017 by Michael Mayer to plain C for use with Sduino
 */
@@ -86,27 +87,29 @@ extern TwoWire Wire;
 */
 
 /* only this minimal interface is currently implemented: */
-void	Wire_begin(void);
-void	Wire_end(void);
-void	Wire_setClock(uint32_t);
-void	Wire_setTimeout(uint16_t);
+void Wire_begin(void);
+void Wire_beginSlave(uint8_t address);
+void Wire_end(void);
+void Wire_setClock(uint32_t);
+void Wire_setTimeout(uint16_t);
 
-void		Wire_beginTransmission(uint8_t);
-uint8_t 	Wire_endTransmission1(uint8_t sendStop);
-inline uint8_t	Wire_endTransmission(void){return Wire_endTransmission1(true);}
+void Wire_beginTransmission(uint8_t);
+uint8_t	Wire_endTransmission1(uint8_t sendStop);
+inline uint8_t Wire_endTransmission(void){return Wire_endTransmission1(true);}
 
-size_t	Wire_write(uint8_t);
-size_t	Wire_write_s(const uint8_t *);
-size_t	Wire_write_sn(const uint8_t *, size_t);
-int	Wire_available(void);
-int	Wire_read(void);
-int	Wire_peek(void);
-void	Wire_flush(void);
+size_t Wire_write(uint8_t);
+size_t Wire_write_s(const uint8_t *);
+size_t Wire_write_sn(const uint8_t *, size_t);
+int Wire_available(void);
+int Wire_read(void);
+int Wire_peek(void);
+void Wire_flush(void);
+void Wire_onReceive( void (*function)(int) );
+void Wire_onRequest( void (*function)(void) );
 
-uint8_t	Wire_requestFrom2(uint8_t address, uint8_t quantity);
-uint8_t	Wire_requestFrom3(uint8_t address, uint8_t quantity, uint8_t sendStop);
+uint8_t Wire_requestFrom2(uint8_t address, uint8_t quantity);
+uint8_t Wire_requestFrom3(uint8_t address, uint8_t quantity, uint8_t sendStop);
 uint8_t Wire_requestFrom5(uint8_t address, uint8_t quantity, uint32_t iaddress, uint8_t isize, uint8_t sendStop);
-
 
 // Pseudo-OO interface: Plain C disguised as almost-C++, thanks to X-Macros
 //
