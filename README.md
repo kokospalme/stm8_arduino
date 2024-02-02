@@ -1,4 +1,7 @@
 # Sduino: Small Devices Arduino
+##
+This is a fork of [akashkapashia's STM8 platform repository](https://github.com/akashkapashia/stm8_arduino) with the integration of [stefaandesmet2003's Wire's slave functionality](https://github.com/stefaandesmet2003/sduino).
+
 
 **Getting started on the STM8 the easy way.**
 
@@ -34,7 +37,7 @@ instructions](https://tenbaht.github.io/sduino/usage/manual-install/).
 
 Start the Arduino-IDE. In *File->Preferences*, *Settings* tab, enter
 
-> https://github.com/akashkapashia/stm8_arduino/raw/master/package_sduino_stm8_index.json
+> https://github.com/kokospalme/stm8_arduino/raw/master/package_sduino_stm8_index.json
 
 as an *Additional Boards Manager URL*.
 
