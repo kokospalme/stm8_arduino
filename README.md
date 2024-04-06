@@ -86,7 +86,7 @@ guide](https://tenbaht.github.io/sduino/api/migration/) for details.
 * SPI: Real hardware-SPI up to 10MHz.
 * Wire: Port of the stock Wire library for I2C communication (with
   improvements)
-* I2C: Port of the I2C master library by Wayne Truchsess
+* I2C: Port of the I2C master library by Wayne Truchsess and [stefaandesmet2003's I2C slave functionality](https://github.com/stefaandesmet2003/sduino)
 * HardwareSerial: The standard serial interface.
 
 #### Displays
